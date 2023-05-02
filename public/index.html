@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-    <title>Google Sign-In Demo</title>
+    <title>Login Chat</title>
   </head>
   <body class="container">
 
@@ -15,10 +15,13 @@
 
     <div class="row">
       <div class="col-md-4">
+        <H2>Login Google</H2>
         <div id="g_id_onload"
-       data-client_id="788315708996-3fcdv82ujeddijksohos2ann96s6595s.apps.googleusercontent.com"
+       data-client_id="788315708996-3fcdv82ujeddijksohos2ann96s6595s.apps.googleusercontent.com",
+
        data-auto_prompt="false",
-       data-callback="handleCredentialResponse">
+       data-callback="handleCredentialResponse"
+       >
     </div>
     <div class="g_id_signin"
        data-type="standard"
@@ -31,6 +34,7 @@
       </div>
 
       <div class="col-md-8">
+        <h2>Login manual</h2>
         <form action="http://localhost:8080/auth/" method="POST" >
           
           <input type="text" name="email" placeholder="Correo electronico" class="form-control" autofocus required>
@@ -65,10 +69,35 @@
          })
          //Recibimos la respuesta del servidor 
          .then(response=>response.json())
-         .then(data=> console.log(data))
+         .then(data=>{ 
+                      if(data!==null){
+                        window.location.href="http://localhost:8080/chat"
+                       //TODO: El data contiene la info de la res.status(200).send de la solicitud POST en AUTH en el servidor 
+                                                  //console.log(data)}  
+                       //Lo que se hace es enviar esta data en la req del POST de la ruta chat para luego poder acceder a esta
+                      return fetch("http://localhost:8080/chat",{
+                        method:'POST',
+                        headers:{
+                          'Content-Type':'application/json'
+                        },
+                        body:JSON.stringify(data)
+                      })
+                      //Muestra la respuesta en el Cliente desde el res.send(data) del GET de /chat
+                      .then(response=>response.json())
+                      .then(data2=>{
+                        console.log(data2)
+                        
+                      })
+                      }
+                      else{
+                        console.log('Usuario denegado')
+                      }
+                       
+         })
          .catch(error=>console.log(error))
 
       }
     </script>
+
   </body>
 </html>

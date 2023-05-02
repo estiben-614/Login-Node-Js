@@ -29,7 +29,8 @@ export const crearUsuario=async (req,res)=>{
         usuarioBD.save()
 
         res.send({
-            msg: 'Todo ok'
+            msg: 'Usuario creado',
+
         })
     }
     

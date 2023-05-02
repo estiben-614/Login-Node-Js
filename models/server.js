@@ -3,6 +3,8 @@ import {  RegisterRouter } from "../routes/register.js";
 import bodyParser from "body-parser"
 import { dbConeccion } from "../helpers/db.js";
 import { AuthRouter } from "../routes/auth.js";
+import cookieParser from "cookie-parser";
+import { AuthChat } from "../routes/chat.js";
 
 export class Servidor{
     constructor(){
@@ -17,7 +19,8 @@ export class Servidor{
         //rutas
         this.paths={
             auth:'/auth',
-            register:'/register'
+            register:'/register',
+            chat:'/chat'
         }
        
         //Middlewares : Funciones que se van a levantar cuando se ejecute el servidor 
@@ -46,12 +49,16 @@ export class Servidor{
         //Directorio publico
         this.app.use(express.static('public'))
 
+        //Cookie Parser
+        this.app.use(cookieParser())
+
        
     }
 
     routes(){
         this.app.use(this.paths.register,RegisterRouter)
         this.app.use(this.paths.auth,AuthRouter)
+        this.app.use(this.paths.chat,AuthChat)
 
     }
 
